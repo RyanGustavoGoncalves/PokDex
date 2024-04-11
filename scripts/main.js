@@ -4,7 +4,7 @@ let loading = false;
 let offSet = 0;
 let count = 0;
 
-fetch(`https://pokeapi.co/api/v2/pokemon?limit=20`)
+fetch(`https://pokeapi.co/api/v2/pokemon?limit=35`)
     .then(response => {
         if (!response.ok) {
             throw new Error('Erro ao carregar dados da API');
