@@ -1,4 +1,5 @@
 const pokemonListE1 = document.getElementById("pokemons");
+const modal = document.getElementById("modal");
 let loading = false;
 let offSet = 0;
 let count = 0;
@@ -14,6 +15,8 @@ fetch(`https://pokeapi.co/api/v2/pokemon?limit=20`)
     .catch(error => console.error(error))
 
 async function loadPokemons(response) {
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
     try {
         let pokemons = response.results;
         count = response.count;
@@ -30,15 +33,18 @@ async function loadPokemons(response) {
             pokemon.species = await specieResponse.json();
             return pokemon;
         }));
-
+        
         for (let i in pokemons) {
             showPokemons(pokemons[i])
         }
-
+        
         offSet += response.results.length;
         loading = false;
     } catch (error) {
         console.error(error);
+    } finally {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
     }
 }
 
