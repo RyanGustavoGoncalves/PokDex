@@ -1,3 +1,8 @@
+const pokemonListE1 = document.getElementById("pokemons");
+let loading = false;
+let offSet = 0;
+let count = 0;
+
 fetch(`https://pokeapi.co/api/v2/pokemon?limit=20`)
     .then(response => response.json())
     .then(loadPokemons)
@@ -12,11 +17,12 @@ async function loadPokemons(response) {
         pokemon.species = await specieResponse.json();
         showPokemons(pokemon);
     }
+    offSet += response.results.length;
+    loading = false;
 }
 
 
 function showPokemons(pokemon) {
-    const pokemonListE1 = document.getElementById("pokemons");
     const name = pokemon.name;
     const weight = pokemon.weight / 10;
     const height = pokemon.height / 10;
@@ -72,3 +78,18 @@ function showPokemons(pokemon) {
         </article>
     `
 }
+
+window.addEventListener('scroll', (event) => {
+    const max = document.body.scrollHeight - window.innerHeight;
+    const current = window.scrollY;
+    const percent = current / max
+
+    if (percent > 0.8 && loading == false) {
+        loading = true;
+        console.log(offSet);
+        fetch(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=${offSet}`)
+            .then(response => response.json())
+            .then(loadPokemons)
+            .catch(error => console.log(error))
+    }
+})
